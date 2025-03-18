@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-export default function ClientBody({
+export const ClientBody = ({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}) => {
   const [mounted, setMounted] = useState(false);
 
   // Only apply fade-in effect after hydration is complete

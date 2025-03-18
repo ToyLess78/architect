@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { Computer, Moon, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export function ThemeSelector() {
+export const ThemeSelector = () => {
     const {theme, setTheme} = useTheme();
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
