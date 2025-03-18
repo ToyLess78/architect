@@ -1,5 +1,5 @@
-import { ThemeSelector } from "@/components/theme-selector";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeSelector } from "~/components/theme-selector";
+import { ThemeToggle } from "~/components/theme-toggle";
 
 export default function Home() {
   return (
