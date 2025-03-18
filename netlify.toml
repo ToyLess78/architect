@@ -1,0 +1,3 @@
+[build]
+  command = "mkdir -p static && cp build/index.html static/"
+  publish = "static"
