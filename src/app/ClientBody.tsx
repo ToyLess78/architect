@@ -1,20 +1,26 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function ClientBody({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Remove any extension-added classes during hydration
+  const [mounted, setMounted] = useState(false);
+
+  // Only apply fade-in effect after hydration is complete
   useEffect(() => {
-    // This runs only on the client after hydration
-    document.body.className = "antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-50 transition-colors";
+    setMounted(true);
   }, []);
 
   return (
-    <body className="antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-50 transition-colors" suppressHydrationWarning>
+    <body
+      className={`antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-50 transition-colors duration-300 ease-in-out ${
+        mounted ? 'opacity-100' : 'opacity-0'
+      }`}
+      suppressHydrationWarning
+    >
       {children}
     </body>
   );
