@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -70,6 +68,12 @@
 
   body {
     @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))] transition-colors duration-300;
+    font-family: var(--font-quicksand), sans-serif;
+  }
+
+  /* Apply Italiana font to all headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-italiana), serif;
   }
 }
 
@@ -78,4 +82,15 @@
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+/* Custom utilities for font usage */
+@layer utilities {
+  .font-quicksand {
+    font-family: var(--font-quicksand), sans-serif;
+  }
+
+  .font-italiana {
+    font-family: var(--font-italiana), serif;
+  }
 }

@@ -1,19 +1,45 @@
 export const noFlashScript = `
-(function() {
-  try {
-    const storedTheme = localStorage.getItem('theme') || 'system';
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  (function() {
+    let storageKey = 'theme';
+    let preferDarkQuery = '(prefers-color-scheme: dark)';
+    let darkModeClass = 'dark';
 
-    const theme =
-      storedTheme === 'system'
-        ? prefersDark ? 'dark' : 'light'
-        : storedTheme;
+    function getTheme() {
+      try {
+        // First try to get from localStorage
+        let localStorageTheme = localStorage.getItem(storageKey);
+        if (localStorageTheme) return localStorageTheme;
 
-    document.documentElement.classList.remove('dark', 'light');
-    document.documentElement.classList.add(theme);
-    window.__THEME_INITIAL = theme;
-  } catch(e) {
-    console.error('Theme initialization error:', e);
-  }
-})();
+        // If not in localStorage, check system preference
+        if (window.matchMedia(preferDarkQuery).matches) {
+          return 'dark';
+        }
+
+        // Default to light otherwise
+        return 'light';
+      } catch (e) {
+        // Fallback if localStorage is unavailable
+        return 'light';
+      }
+    }
+
+    function applyTheme(theme) {
+      let root = document.documentElement;
+      let isDark = theme === 'dark';
+
+      if (isDark) {
+        root.classList.add(darkModeClass);
+      } else {
+        root.classList.remove(darkModeClass);
+      }
+    }
+
+    // Apply theme immediately to prevent flash
+    let theme = getTheme();
+    applyTheme(theme);
+
+    // Save for client-side access later
+    window.__initialTheme = theme;
+  })()
 `;
+

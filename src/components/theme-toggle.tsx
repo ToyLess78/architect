@@ -13,32 +13,26 @@ export const ThemeToggle = () => {
     setMounted(true);
   }, []);
 
-  // Don't render anything until component is mounted
+  // Don't render anything until component is mounted to avoid hydration mismatch
   if (!mounted) {
-    return null;
+    return <div className="w-9 h-9" aria-hidden="true" />; // Placeholder with same dimensions
   }
 
-  const currentTheme = theme === "system" ? resolvedTheme : theme;
-
-  const toggleTheme = () => {
-    if (currentTheme === "dark") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
-  };
+  // Use resolvedTheme to get the actual theme currently applied (including system preference)
+  const isDark = resolvedTheme === "dark";
 
   return (
-    <button
-      onClick={toggleTheme}
-      className="rounded-md p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
-      aria-label="Toggle theme"
-    >
-      {currentTheme === "dark" ? (
-        <Sun className="h-5 w-5" />
-      ) : (
-        <Moon className="h-5 w-5" />
-      )}
-    </button>
+      <button
+          onClick={() => setTheme(isDark ? "light" : "dark")}
+          className="rounded-md p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+          aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
+          title={`Switch to ${isDark ? "light" : "dark"} theme`}
+      >
+        {isDark ? (
+            <Sun className="h-5 w-5" />
+        ) : (
+            <Moon className="h-5 w-5" />
+        )}
+      </button>
   );
 }

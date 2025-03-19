@@ -1,20 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Italiana, Quicksand } from "next/font/google";
 import "./globals.css";
 import { ClientBody } from "./ClientBody";
 import { Providers } from "./providers";
 import { noFlashScript } from "~/components/theme-script";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const quicksand = Quicksand({
   subsets: ["latin"],
-  display: "swap"
+  variable: "--font-quicksand",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const italiana = Italiana({
+  weight: "400",
   subsets: ["latin"],
-  display: "swap"
+  variable: "--font-italiana",
+  display: "swap",
 });
 
 
@@ -37,10 +39,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
-    <head>
-      <script dangerouslySetInnerHTML={{__html: noFlashScript}}/>
-    </head>
+      <html lang="en" className={`${quicksand.variable} ${italiana.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: noFlashScript }} />
+      </head>
       <ClientBody>
         <Providers>
           {children}
