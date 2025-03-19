@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { Computer, Moon, Sun } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export const ThemeSelector = () => {
     const {theme, setTheme} = useTheme();
@@ -22,49 +22,73 @@ export const ThemeSelector = () => {
             }
         }
 
-        document.addEventListener("mousedown", handleClickOutside);
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }
+    }, [isOpen]);
+
+    // Handle escape key to close dropdown
+    useEffect(() => {
+        function handleEscKey(event: KeyboardEvent) {
+            if (event.key === "Escape" && isOpen) {
+                setIsOpen(false);
+            }
+        }
+
+        document.addEventListener("keydown", handleEscKey);
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleEscKey);
         };
-    }, []);
+    }, [isOpen]);
 
     const themes = [
         {
             name: "Light",
             value: "light",
-            icon: <Sun className="mr-2 h-4 w-4"/>,
+            icon: <Sun className="mr-2 h-4 w-4" />,
         },
         {
             name: "Dark",
             value: "dark",
-            icon: <Moon className="mr-2 h-4 w-4"/>,
+            icon: <Moon className="mr-2 h-4 w-4" />,
         },
         {
             name: "System",
             value: "system",
-            icon: <Computer className="mr-2 h-4 w-4"/>,
+            icon: <Computer className="mr-2 h-4 w-4" />,
         },
     ];
 
-    // Don't render anything until mounted to avoid hydration mismatch
+    // Don't render meaningful content until mounted to avoid hydration mismatch
     if (!mounted) {
-        return null;
+        return <div className="h-9 w-24" aria-hidden="true" />; // Placeholder
     }
 
-    const currentTheme = themes.find((t) => t.value === theme) || themes[2];
+    // Get the display value for the current theme
+    const currentTheme = theme || "system";
+    const displayTheme = themes.find((t) => t.value === currentTheme) || themes[2];
 
     return (
         <div className="relative" ref={dropdownRef}>
             <button
                 className="flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
                 onClick={() => setIsOpen(!isOpen)}
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+                aria-label="Select theme"
             >
-                {currentTheme?.icon}
-                {currentTheme?.name}
+                {displayTheme.icon}
+                {displayTheme.name}
             </button>
+
             {isOpen && (
                 <div
-                    className="absolute right-0 mt-2 w-36 rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-950">
+                    className="absolute right-0 mt-2 w-36 rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-950"
+                    role="listbox"
+                >
                     <div className="py-1">
                         {themes.map((item) => (
                             <button
@@ -78,6 +102,8 @@ export const ThemeSelector = () => {
                                     setTheme(item.value);
                                     setIsOpen(false);
                                 }}
+                                role="option"
+                                aria-selected={theme === item.value}
                             >
                                 {item.icon}
                                 {item.name}
