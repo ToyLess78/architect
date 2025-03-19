@@ -9,19 +9,30 @@ export const ClientBody = ({
 }) => {
   const [mounted, setMounted] = useState(false);
 
-  // Only apply fade-in effect after hydration is complete
+  // Add fade-in effect after hydration is complete to avoid flicker
   useEffect(() => {
-    setMounted(true);
+    // A short timeout ensures CSS transitions take effect properly
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 10);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <body
-      className={`antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-50 transition-colors duration-300 ease-in-out ${
-        mounted ? 'opacity-100' : 'opacity-0'
-      }`}
-      suppressHydrationWarning
-    >
+      <body
+          className={`
+        antialiased
+        bg-[hsl(var(--background))]
+        text-[hsl(var(--foreground))]
+        transition-colors
+        duration-300
+        ease-in-out
+        ${mounted ? 'opacity-100' : 'opacity-0'}
+      `}
+          suppressHydrationWarning
+      >
       {children}
-    </body>
+      </body>
   );
 }
